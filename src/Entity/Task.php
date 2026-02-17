@@ -52,4 +52,26 @@ class Task
         $this->description = $description;
         return $this;
     }
+
+    public function getCreatedBy(): int
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(int $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+        return $this;
+    }
+
+    public function getLastModifiedBy(): int
+    {
+        return $this->lastModifiedBy;
+    }
+
+    public function setLastModifiedBy(int $lastModifiedBy): self
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+        return $this;
+    }
 }
