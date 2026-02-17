@@ -6,29 +6,29 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory:
-            users:
-                user: { password: userpass, roles: [ 'ROLE_USER' ] }
-                adm: { password: admpass, roles: [ 'ROLE_ADMIN' ] }
+            memory:
+                users:
+                    user: { password: "$2y$13$RGxvWzforKZe2LwVTH52e.TqcgfvmRJddA8YJE5v5JMstn8WZDbL.", roles: [ 'ROLE_USER' ] }
+                    adm: { password: "$2y$13$Xg.KNs0kTQhcTu2T4Hqone12MRwrAIEScSBM7BNT9tPZ0G9yfyRX", roles: [ 'ROLE_ADMIN' ] }
 
     firewalls:
-        dev:
-            # Ensure dev tools and static assets are always allowed
-            pattern: ^/(_profiler|_wdt|assets|build)/
-            security: false
-        main:
-            lazy: true
-            provider: users_in_memory
-
-            # Activate different ways to authenticate:
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+        auth:
+            pattern: ^/api/auth
+            stateless: true
+            json_login:
+                check_path: /api/auth/login
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern: ^/api
+            stateless: true
+            jwt: ~
 
     # Note: Only the *first* matching rule is applied
     access_control:
-    # - { path: ^/admin, roles: ROLE_ADMIN }
-    # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/auth/login,  roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/register,  roles: PUBLIC_ACCESS }
+        - { path: ^/api,        roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
