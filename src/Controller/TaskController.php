@@ -25,7 +25,7 @@ final class TaskController extends AbstractController
      *
      * @return JsonResponse<TaskDto[]> list of tasks
      */
-    #[Route(path: '/', methods: ['GET'])]
+    #[Route(methods: ['GET'])]
     public function getAllTasks(): JsonResponse
     {
         return $this->json([
@@ -40,8 +40,10 @@ final class TaskController extends AbstractController
      * @param TaskCreateDto $taskCreateDto task data to store
      * @return JsonResponse<TaskDto> created task json representation
      */
-    #[Route('/', methods: ['POST'])]
-    public function createTask(#[MapRequestPayload] TaskCreateDto $taskCreateDto): JsonResponse
+    #[Route(methods: ['POST'])]
+    public function createTask(
+        #[MapRequestPayload(acceptFormat: 'json', validationFailedStatusCode: 400)] TaskCreateDto $taskCreateDto
+    ): JsonResponse
     {
         return $this->json([
             'message' => 'Welcome to your new controller!',
@@ -76,9 +78,8 @@ final class TaskController extends AbstractController
      */
     #[Route(path: '/{taskId}', methods: ['PATCH'])]
     public function updateTaskById(
-        #[MapEntity(id: 'taskId', message: 'The task doesnt exists')]
-        Task                              $task,
-        #[MapRequestPayload] TaskPatchDto $taskPatchDto
+        #[MapEntity(id: 'taskId', message: 'The task doesnt exists')] Task                       $task,
+        #[MapRequestPayload(acceptFormat: 'json', validationFailedStatusCode: 400)] TaskPatchDto $taskPatchDto
     ): JsonResponse
     {
         return $this->json([
