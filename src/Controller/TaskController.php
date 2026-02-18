@@ -81,7 +81,7 @@ final class TaskController extends AbstractController
      * @param TaskPatchDto $taskPatchDto updates for task
      * @return JsonResponse<Task> updated task json representation
      *
-     * @throws ExceptionInterface on serialize patch dto to json back
+     * @throws ExceptionInterface on serialize patch dto to json ($taskService->updateTask)
      */
     #[Route(path: '/{taskId}', methods: ['PATCH'])]
     public function updateTaskById(
@@ -89,21 +89,10 @@ final class TaskController extends AbstractController
         Task                $task,
         #[MapRequestPayload(acceptFormat: 'json', validationFailedStatusCode: 400)]
         TaskPatchDto        $taskPatchDto,
-        SerializerInterface $serializer,
     ): JsonResponse
     {
         $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
-
-        $patchedFields = $serializer->serialize($taskPatchDto, 'json', [
-            'skip_null_values' => true
-        ]);
-        $serializer->deserialize($patchedFields, Task::class, 'json', [
-            'groups' => ['task:update'],
-            'object_to_populate' => $task,
-        ]);
-
-        $this->taskRepository->save($task);
-
+        $this->taskService->updateTask($task, $taskPatchDto);
         return $this->json($task);
     }
 }

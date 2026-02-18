@@ -18,6 +18,7 @@ final class ProjectVoter extends Voter
     public const string VIEW = 'PROJECT_VIEW';
     public const string DELETE = 'PROJECT_DELETE';
     public const string CREATE_TASKS = 'PROJECT_TASKS_CREATE';
+    public const string UPDATE_TASKS = 'PROJECT_TASKS_UPDATE';
 
     /**
      * Check supports voter vote access to subject
