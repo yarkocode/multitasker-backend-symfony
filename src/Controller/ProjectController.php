@@ -6,6 +6,7 @@ use App\Dto\Project\ProjectCreateDto;
 use App\Dto\Project\ProjectPatchDto;
 use App\Entity\Project;
 use App\Repository\ProjectRepository;
+use App\Security\Voter\ProjectVoter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -78,6 +79,7 @@ final class ProjectController extends AbstractController
         Project $project
     ): JsonResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::VIEW, $project);
         return $this->json($project);
     }
 
@@ -99,6 +101,7 @@ final class ProjectController extends AbstractController
         SerializerInterface $serializer,
     ): JsonResponse
     {
+        $this->denyAccessUnlessGranted(ProjectVoter::EDIT, $project);
         $patchedFields = $serializer->serialize($projectPatchDto, 'json', [
             'skip_null_values' => true
         ]);
