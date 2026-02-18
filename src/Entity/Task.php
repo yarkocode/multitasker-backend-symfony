@@ -6,6 +6,7 @@ use App\Entity\Abstract\Auditable;
 use App\Entity\Abstract\AuditableInterface;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 #[ORM\Table(name: 'tasks')]
@@ -19,9 +20,11 @@ class Task implements AuditableInterface
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['task:update', 'task:write'])]
     private string $title;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['task:update', 'task:write'])]
     private ?string $description;
 
     public function getId(): ?int
