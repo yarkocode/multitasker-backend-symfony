@@ -27,6 +27,14 @@ class Task implements AuditableInterface
     #[Groups(['task:update', 'task:write'])]
     private ?string $description;
 
+    /**
+     * Project as task location group (many-to-one relation)
+     * @var Project|null in project located
+     */
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'tasks')]
+    #[ORM\JoinColumn('project_id', 'id', nullable: true)]
+    private ?Project $project = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -51,6 +59,17 @@ class Task implements AuditableInterface
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+        return $this;
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): self
+    {
+        $this->project = $project;
         return $this;
     }
 }
