@@ -80,25 +80,6 @@ final class TaskController extends AbstractController
      * @param Task $task automatic mapped task entity by taskId path param
      * @param TaskPatchDto $taskPatchDto updates for task
      * @return JsonResponse<Task> updated task json representation
-     */
-    #[Route(path: '/{taskId}', methods: ['PATCH'])]
-    public function updateTaskById(
-        #[MapEntity(id: 'taskId', message: 'The task doesnt exists')] Task                       $task,
-        #[MapRequestPayload(acceptFormat: 'json', validationFailedStatusCode: 400)] TaskPatchDto $taskPatchDto
-    ): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/TaskController.php',
-        ]);
-    }
-
-    /**
-     * Patch-update task and return updated task json repr.
-     *
-     * @param Task $task automatic mapped task entity by taskId path param
-     * @param TaskPatchDto $taskPatchDto updates for task
-     * @return JsonResponse<Task> updated task json representation
      *
      * @throws ExceptionInterface on serialize patch dto to json back
      */
