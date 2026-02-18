@@ -5,12 +5,12 @@ namespace App\Dto\Project;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Provide data to create project
+ * Provide data to update project
  */
-class ProjectCreateDto
+class ProjectPatchDto
 {
-    #[Assert\NotBlank(message: 'Name is required')]
-    protected string $name;
+    #[Assert\NotBlank(message: 'Name is required', allowNull: true)]
+    protected ?string $name;
 
     #[Assert\NotBlank(message: 'Cant be blank. Allowed null', allowNull: true)]
     #[Assert\Length(min: 10, max: 10_000, minMessage: 'Minimum 10 characters', maxMessage: 'Maximum 10.000 characters')]

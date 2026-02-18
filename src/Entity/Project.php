@@ -6,6 +6,7 @@ use App\Entity\Abstract\Auditable;
 use App\Entity\Abstract\AuditableInterface;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ORM\Table(name: 'projects')]
@@ -19,9 +20,11 @@ class Project implements AuditableInterface
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['project:update', 'project:create'])]
     private string $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups(['project:update', 'project:create'])]
     private ?string $description = null;
 
     public function getId(): ?int
