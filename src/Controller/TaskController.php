@@ -6,11 +6,13 @@ use App\Dto\Task\TaskCreateDto;
 use App\Dto\Task\TaskPatchDto;
 use App\Entity\Task;
 use App\Repository\TaskRepository;
+use App\Security\Voter\TaskVoter;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -60,7 +62,7 @@ final class TaskController extends AbstractController
     }
 
     /**
-     * Get task by id and return task json repr.
+     * Get own task by id and return task json repr.
      *
      * @param Task $task automatic mapped task entity by taskId path param
      * @return JsonResponse<Task> task json representation
@@ -71,11 +73,12 @@ final class TaskController extends AbstractController
         Task $task
     ): JsonResponse
     {
+        $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
         return $this->json($task);
     }
 
     /**
-     * Patch-update task and return updated task json repr.
+     * Patch-update own task and return updated task json repr.
      *
      * @param Task $task automatic mapped task entity by taskId path param
      * @param TaskPatchDto $taskPatchDto updates for task
@@ -92,6 +95,8 @@ final class TaskController extends AbstractController
         SerializerInterface $serializer,
     ): JsonResponse
     {
+        $this->denyAccessUnlessGranted(TaskVoter::EDIT, $task);
+
         $patchedFields = $serializer->serialize($taskPatchDto, 'json', [
             'skip_null_values' => true
         ]);
