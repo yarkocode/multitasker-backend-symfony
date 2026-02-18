@@ -7,6 +7,7 @@ use App\Dto\Task\TaskPatchDto;
 use App\Entity\Task;
 use App\Repository\TaskRepository;
 use App\Security\Voter\TaskVoter;
+use App\Service\TaskService;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,7 +25,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route(path: '/tasks')]
 final class TaskController extends AbstractController
 {
-    public function __construct(private readonly TaskRepository $taskRepository)
+    public function __construct(private readonly TaskService    $taskService,
+                                private readonly TaskRepository $taskRepository)
     {
     }
 
@@ -52,12 +54,7 @@ final class TaskController extends AbstractController
         TaskCreateDto $taskCreateDto
     ): JsonResponse
     {
-        $task = new Task()
-            ->setTitle($taskCreateDto->getTitle())
-            ->setDescription($taskCreateDto->getDescription());
-
-        $this->taskRepository->save($task);
-
+        $task = $this->taskService->createTask($taskCreateDto);
         return $this->json($task);
     }
 
