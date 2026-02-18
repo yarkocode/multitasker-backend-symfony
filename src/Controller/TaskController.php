@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 /**
@@ -33,10 +35,7 @@ final class TaskController extends AbstractController
     #[Route(methods: ['GET'])]
     public function getAllTasks(): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/TaskController.php',
-        ]);
+        return $this->json($this->taskRepository->findAllByCurrentUser());
     }
 
     /**
@@ -47,7 +46,8 @@ final class TaskController extends AbstractController
      */
     #[Route(methods: ['POST'])]
     public function createTask(
-        #[MapRequestPayload(acceptFormat: 'json', validationFailedStatusCode: 400)] TaskCreateDto $taskCreateDto
+        #[MapRequestPayload(acceptFormat: 'json', validationFailedStatusCode: 400)]
+        TaskCreateDto $taskCreateDto
     ): JsonResponse
     {
         $task = new Task()
@@ -65,7 +65,7 @@ final class TaskController extends AbstractController
      * @param Task $task automatic mapped task entity by taskId path param
      * @return JsonResponse<Task> task json representation
      */
-    #[Route(path: '/{taskId}')]
+    #[Route(path: '/{taskId}', methods: ['GET'])]
     public function getTaskById(
         #[MapEntity(id: 'taskId', message: 'The task doesnt exists')]
         Task $task
