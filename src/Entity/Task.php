@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
+use App\Entity\Abstract\Auditable;
+use App\Entity\Abstract\AuditableInterface;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 #[ORM\Table(name: 'tasks')]
-class Task
+class Task implements AuditableInterface
 {
+    use Auditable;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -19,12 +23,6 @@ class Task
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
-
-    #[ORM\Column]
-    private int $createdBy;
-
-    #[ORM\Column]
-    private int $lastModifiedBy;
 
     public function getId(): ?int
     {
@@ -50,28 +48,6 @@ class Task
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-        return $this;
-    }
-
-    public function getCreatedBy(): int
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(int $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-        return $this;
-    }
-
-    public function getLastModifiedBy(): int
-    {
-        return $this->lastModifiedBy;
-    }
-
-    public function setLastModifiedBy(int $lastModifiedBy): self
-    {
-        $this->lastModifiedBy = $lastModifiedBy;
         return $this;
     }
 }

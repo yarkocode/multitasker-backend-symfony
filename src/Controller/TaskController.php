@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Dto\Task\TaskCreateDto;
-use App\Dto\Task\TaskDto;
 use App\Dto\Task\TaskPatchDto;
 use App\Entity\Task;
+use App\Repository\TaskRepository;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,10 +20,15 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(path: '/tasks')]
 final class TaskController extends AbstractController
 {
+    public function __construct(private readonly TaskRepository $taskRepository)
+    {
+    }
+
+
     /**
      * Get all tasks created by user
      *
-     * @return JsonResponse<TaskDto[]> list of tasks
+     * @return JsonResponse<Task[]> list of tasks
      */
     #[Route(methods: ['GET'])]
     public function getAllTasks(): JsonResponse
@@ -38,24 +43,27 @@ final class TaskController extends AbstractController
      * Create task and return task json repr.
      *
      * @param TaskCreateDto $taskCreateDto task data to store
-     * @return JsonResponse<TaskDto> created task json representation
+     * @return JsonResponse<Task> created task json representation
      */
     #[Route(methods: ['POST'])]
     public function createTask(
         #[MapRequestPayload(acceptFormat: 'json', validationFailedStatusCode: 400)] TaskCreateDto $taskCreateDto
     ): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/TaskController.php',
-        ]);
+        $task = new Task()
+            ->setTitle($taskCreateDto->getTitle())
+            ->setDescription($taskCreateDto->getDescription());
+
+        $this->taskRepository->save($task);
+
+        return $this->json($task);
     }
 
     /**
      * Get task by id and return task json repr.
      *
      * @param Task $task automatic mapped task entity by taskId path param
-     * @return JsonResponse<TaskDto> task json representation
+     * @return JsonResponse<Task> task json representation
      */
     #[Route(path: '/{taskId}')]
     public function getTaskById(
@@ -63,10 +71,7 @@ final class TaskController extends AbstractController
         Task $task
     ): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/TaskController.php',
-        ]);
+        return $this->json($task);
     }
 
     /**
@@ -74,7 +79,7 @@ final class TaskController extends AbstractController
      *
      * @param Task $task automatic mapped task entity by taskId path param
      * @param TaskPatchDto $taskPatchDto updates for task
-     * @return JsonResponse<TaskDto> updated task json representation
+     * @return JsonResponse<Task> updated task json representation
      */
     #[Route(path: '/{taskId}', methods: ['PATCH'])]
     public function updateTaskById(
