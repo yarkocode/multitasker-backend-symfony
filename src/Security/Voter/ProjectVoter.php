@@ -17,15 +17,16 @@ final class ProjectVoter extends Voter
     public const string EDIT = 'PROJECT_EDIT';
     public const string VIEW = 'PROJECT_VIEW';
     public const string DELETE = 'PROJECT_DELETE';
+    public const string CREATE_TASKS = 'PROJECT_TASKS_CREATE';
 
     /**
      * Check supports voter vote access to subject
      *
-     * @see Voter
-     *
      * @param string $attribute action to do with subject
      * @param mixed|Project $subject subject to get access
      * @return bool can vote
+     * @see Voter
+     *
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -36,13 +37,13 @@ final class ProjectVoter extends Voter
     /**
      * Vote accept action or not
      *
-     * @see Voter
-     *
      * @param string $attribute
      * @param Project $subject
      * @param TokenInterface $token
      * @param Vote|null $vote old decision
      * @return bool action accepted
+     * @see Voter
+     *
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
@@ -55,7 +56,7 @@ final class ProjectVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         return match ($attribute) {
-            self::EDIT | self::VIEW | self::DELETE => $this->isUserCreator($subject, $user),
+            self::EDIT | self::VIEW | self::DELETE | self::CREATE_TASKS => $this->isUserCreator($subject, $user),
             default => false,
         };
     }
