@@ -19,6 +19,16 @@ final class ProjectVoter extends Voter
     public const string DELETE = 'PROJECT_DELETE';
     public const string CREATE_TASKS = 'PROJECT_TASKS_CREATE';
     public const string UPDATE_TASKS = 'PROJECT_TASKS_UPDATE';
+    public const string VIEW_TASKS = 'PROJECT_TASKS_VIEW';
+
+    private const array ACCEPTED_ACTIONS = [
+        self::EDIT,
+        self::VIEW,
+        self::DELETE,
+        self::CREATE_TASKS,
+        self::UPDATE_TASKS,
+        self::VIEW_TASKS
+    ];
 
     /**
      * Check supports voter vote access to subject
@@ -31,7 +41,7 @@ final class ProjectVoter extends Voter
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
+        return in_array($attribute, self::ACCEPTED_ACTIONS)
             && $subject instanceof Project;
     }
 
@@ -57,7 +67,8 @@ final class ProjectVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         return match ($attribute) {
-            self::EDIT | self::VIEW | self::DELETE | self::CREATE_TASKS => $this->isUserCreator($subject, $user),
+            self::EDIT | self::VIEW | self::DELETE | self::CREATE_TASKS | self::UPDATE_TASKS | self::VIEW_TASKS
+            => $this->isUserCreator($subject, $user),
             default => false,
         };
     }

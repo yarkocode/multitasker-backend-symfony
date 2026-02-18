@@ -29,6 +29,19 @@ final class ProjectTasksController extends AbstractController
     }
 
     /**
+     * Get all project tasks
+     *
+     * @param Project $project user workplace with tasks
+     * @return JsonResponse<Task[]> project tasks
+     */
+    #[Route(methods: ['GET'])]
+    public function getAllTasks(#[MapEntity(id: 'projectId')] Project $project): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(ProjectVoter::VIEW_TASKS, $project);
+        return $this->json($project->getTasks());
+    }
+
+    /**
      * Create task and add to project
      *
      * @param Project $project project where task will locate
