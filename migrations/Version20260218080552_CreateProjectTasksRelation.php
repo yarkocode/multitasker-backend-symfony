@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260218080552CreateProjectTasksRelation extends AbstractMigration
+final class Version20260218080552_CreateProjectTasksRelation extends AbstractMigration
 {
     public function getDescription(): string
     {
