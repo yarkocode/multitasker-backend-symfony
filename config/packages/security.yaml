@@ -5,23 +5,29 @@ security:
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory:
-            memory:
-                users:
-                    user: { password: "$2y$13$RGxvWzforKZe2LwVTH52e.TqcgfvmRJddA8YJE5v5JMstn8WZDbL.", roles: [ 'ROLE_USER' ] }
-                    adm: { password: "$2y$13$Xg.KNs0kTQhcTu2T4Hqone12MRwrAIEScSBM7BNT9tPZ0G9yfyRX", roles: [ 'ROLE_ADMIN' ] }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+        jwt_usr_provider:
+            id: App\Security\JwtUserProvider
 
     firewalls:
         auth:
             pattern: ^/api/auth
             stateless: true
+            provider: app_user_provider
             json_login:
                 check_path: /api/auth/login
+                username_path: email
+                password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
         api:
             pattern: ^/api
             stateless: true
+            provider: jwt_usr_provider
             jwt: ~
 
     # Note: Only the *first* matching rule is applied
