@@ -25,7 +25,7 @@ final class ProjectTasksController extends AbstractController
     /**
      * Create task and add to project
      *
-     * @param Project $project project where task will located
+     * @param Project $project project where task will locate
      * @param TaskCreateDto $taskCreateDto data to create task in project
      * @return JsonResponse<Task> created task
      */
