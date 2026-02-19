@@ -55,7 +55,7 @@ final class TaskVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         return match ($attribute) {
-            self::EDIT | self::VIEW | self::DELETE => $this->isUserCreator($subject, $user),
+            self::EDIT, self::VIEW, self::DELETE => $this->isUserCreator($subject, $user),
             default => false,
         };
     }
