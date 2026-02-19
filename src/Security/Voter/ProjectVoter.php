@@ -67,7 +67,7 @@ final class ProjectVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         return match ($attribute) {
-            self::EDIT | self::VIEW | self::DELETE | self::CREATE_TASKS | self::UPDATE_TASKS | self::VIEW_TASKS
+            self::EDIT, self::VIEW, self::DELETE, self::CREATE_TASKS, self::UPDATE_TASKS, self::VIEW_TASKS
             => $this->isUserCreator($subject, $user),
             default => false,
         };
