@@ -29,6 +29,10 @@ class Task implements AuditableInterface
     #[Groups(['task:read', 'task:update', 'task:write'])]
     private ?string $description;
 
+    #[ORM\Column(type: 'boolean')]
+    #[Groups(['task:read', 'task:update', 'task:write'])]
+    private bool $completed = false;
+
     /**
      * Project as task location group (many-to-one relation)
      * @var Project|null in project located
