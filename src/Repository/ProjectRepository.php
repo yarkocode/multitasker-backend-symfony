@@ -21,7 +21,7 @@ class ProjectRepository extends ServiceEntityRepository
     public function findAllByCurrentUser()
     {
         return $this->createQueryBuilder('p')
-            ->where('p.currentUser = :uid')
+            ->where('p.createdBy = :uid')
             ->setParameter('uid', $this->security->getUser()->getUserIdentifier())
             ->getQuery()
             ->getResult();
