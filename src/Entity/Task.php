@@ -7,6 +7,7 @@ use App\Entity\Abstract\AuditableInterface;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 #[ORM\Table(name: 'tasks')]
@@ -17,14 +18,15 @@ class Task implements AuditableInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['task:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['task:update', 'task:write'])]
+    #[Groups(['task:read', 'task:update', 'task:write'])]
     private string $title;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    #[Groups(['task:update', 'task:write'])]
+    #[Groups(['task:read', 'task:update', 'task:write'])]
     private ?string $description;
 
     /**
@@ -33,6 +35,8 @@ class Task implements AuditableInterface
      */
     #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'tasks')]
     #[ORM\JoinColumn('project_id', 'id', nullable: true)]
+    #[Groups(['task:read'])]
+    #[Ignore]
     private ?Project $project = null;
 
     public function getId(): ?int
